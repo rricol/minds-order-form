@@ -1,6 +1,7 @@
 import { loadProductsFromCookie } from './utils/cookieManager';
 import {
   attachAddButtonEvents,
+  attachClearButtonEvents,
   attachQuantityChangeEvents,
   attachRemoveButtonEvents,
 } from './utils/eventHandlers';
@@ -14,5 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   attachAddButtonEvents();
   attachRemoveButtonEvents();
   attachQuantityChangeEvents();
+  attachClearButtonEvents();
   initSteps();
 });
