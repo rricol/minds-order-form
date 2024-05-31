@@ -27,6 +27,28 @@ export function initSteps(): void {
           step2Div.style.display = 'block';
 
           const products: Product[] = getCookie('selectedProducts') || [];
+
+          // Check if any selectedProducts has all three possible quantity to 0
+          if (
+            products.every(
+              (product) =>
+                product.quantity === 0 && product.quantityA3 === 0 && product.quantityA2 === 0
+            )
+          ) {
+            const orderProductSelectedWrapper = document.querySelector(
+              '.order_product-selected-wrapper'
+            ) as HTMLElement;
+            const alertDiv = document.createElement('div');
+            alertDiv.classList.add('alert-message');
+            alertDiv.textContent = "Certain produits n'ont pas de quantité sélectionnée.";
+            orderProductSelectedWrapper.insertBefore(
+              alertDiv,
+              orderProductSelectedWrapper.firstChild
+            );
+
+            return;
+          }
+
           let emailContent = `Prix : ${getPricing()} CHF\n+9 CHF de frais de port\n\nProduits sélectionnés:\n`;
           emailContent += products
             .map((product) => {
