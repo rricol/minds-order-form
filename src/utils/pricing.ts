@@ -51,14 +51,14 @@ export function updateSelectedProductsMessage(): void {
   const selectedProductCount = document.querySelector(
     '[data-selected-product-count]'
   ) as HTMLElement;
-  const nextStepButton = document.querySelectorAll(
+  const nextStepButtons = document.querySelectorAll(
     '[data-action="next-step"]'
   ) as NodeListOf<HTMLButtonElement>;
 
   const productCount = selectedProductElements.length;
   const disabled = productCount === 0;
 
-  nextStepButton?.forEach((element) => {
+  nextStepButtons?.forEach((element) => {
     element.toggleAttribute('disabled', disabled);
   });
   selectedProductCount.innerHTML =
