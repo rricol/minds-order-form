@@ -59,6 +59,7 @@ export function updateSelectedProductsMessage(): void {
   const disabled = productCount === 0;
 
   nextStepButtons?.forEach((element) => {
+    element.classList.toggle('is-disabled', disabled);
     element.toggleAttribute('disabled', disabled);
   });
   selectedProductCount.innerHTML =
