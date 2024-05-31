@@ -1,4 +1,9 @@
-import { getCookie, removeProductFromCookie, updateProductQuantityInCookie } from './cookieManager';
+import {
+  getCookie,
+  removeAllProductsFromCookie,
+  removeProductFromCookie,
+  updateProductQuantityInCookie,
+} from './cookieManager';
 import { updateSelectedProductsMessage } from './pricing';
 import { addProductToSelectedList } from './productManager';
 
@@ -24,6 +29,18 @@ function isProductSelected(productType: string, productTitle: string): boolean {
     (product: { type: string; title: string }) =>
       product.type === productType && product.title === productTitle
   );
+}
+
+export function attachClearButtonEvents(): void {
+  document.querySelectorAll('[data-action="clear"]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.selected-product').forEach((productElement) => {
+        productElement.remove();
+      });
+      removeAllProductsFromCookie();
+      updateSelectedProductsMessage();
+    });
+  });
 }
 
 export function attachRemoveButtonEvents(): void {

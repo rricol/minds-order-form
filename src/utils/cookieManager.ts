@@ -60,6 +60,11 @@ export function removeProductFromCookie(productType: string, productTitle: strin
   calculatePricing();
 }
 
+export function removeAllProductsFromCookie(): void {
+  setCookie('selectedProducts', [], 7);
+  calculatePricing();
+}
+
 export function loadProductsFromCookie(): void {
   const products: Product[] = getCookie('selectedProducts') || [];
   products.forEach((product) =>
