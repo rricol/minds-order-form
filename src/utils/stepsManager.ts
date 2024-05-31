@@ -1,4 +1,5 @@
 import { getCookie } from './cookieManager';
+import { getPricing } from './pricing';
 
 interface Product {
   type: string;
@@ -23,7 +24,8 @@ export function initSteps(): void {
         step2Div.style.display = 'block';
 
         const products: Product[] = getCookie('selectedProducts') || [];
-        const emailContent = products
+        let emailContent = `Prix total: <b>${getPricing()}</b>\n\nProduits sélectionnés:\n`;
+        emailContent += products
           .map((product) => {
             const { type, title, quantity, quantityA3, quantityA2 } = product;
             if (type === 'Infographie') {
