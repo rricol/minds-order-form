@@ -24,7 +24,7 @@ export function initSteps(): void {
         step2Div.style.display = 'block';
 
         const products: Product[] = getCookie('selectedProducts') || [];
-        let emailContent = `Prix total: <b>${getPricing()}</b>\n\nProduits sélectionnés:\n`;
+        let emailContent = `Prix total: ${getPricing()} CHF\n\nProduits sélectionnés:\n`;
         emailContent += products
           .map((product) => {
             const { type, title, quantity, quantityA3, quantityA2 } = product;
@@ -37,6 +37,7 @@ export function initSteps(): void {
 
         if (textarea) {
           textarea.value = emailContent;
+          textarea.disabled = true;
         }
       }
     });
