@@ -52,9 +52,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@barba/core": "^2.9.7",
-    "@finsweet/ts-utils": "^0.40.0",
-    "gsap": "^3.12.5"
+    "@finsweet/ts-utils": "^0.40.0"
   },
   "engines": {
     "pnpm": ">=9"
