@@ -1,12 +1,9 @@
 import { getCookie, removeAllResourcesFromCookie, removeResourceFromCookie } from './cookieManager';
-import { getPricing, getResourcePricing } from './getFunctions';
+import { getPricing, getResourceCount, getResourcePricing } from './getFunctions';
 import { addResourceToSelectedList } from './productManager';
+import { checkQuantities } from './stepsManager';
 import type { Product } from './type';
-import {
-  updatePricing,
-  updateResourceCount,
-  updateResourceQuantityInCookie,
-} from './updateFunctions';
+import { updateData, updateResourceQuantityInCookie } from './updateFunctions';
 
 function resourceAlreadySelected(productType: string, productTitle: string): boolean {
   const products = getCookie('selectedProducts') || [];
@@ -24,8 +21,7 @@ export function handleRemove(event: Event): void {
   if (productType && productTitle) {
     productElement.remove();
     removeResourceFromCookie(productType, productTitle);
-    updateResourceCount();
-    updatePricing(); // Update pricing after removing a product
+    updateData();
   }
 }
 
@@ -50,7 +46,7 @@ export function handleInscrease(event: Event): void {
       resourceName.textContent as string,
       format ? { [format]: parseInt(input.value) } : { quantity: parseInt(input.value) }
     );
-    updatePricing(); // Update pricing after changing quantity
+    updateData(); // Update pricing after changing quantity
   }
 }
 
@@ -77,7 +73,7 @@ export function handleDecrease(event: Event): void {
       resourceName.textContent as string,
       format ? { [format]: parseInt(input.value) } : { quantity: parseInt(input.value) }
     );
-    updatePricing(); // Update pricing after changing quantity
+    updateData(); // Update pricing after changing quantity
   }
 }
 
@@ -102,8 +98,8 @@ export function handleInputChange(event: Event): void {
     } else {
       input.value = '0';
     }
-    updatePricing();
   }
+  updateData();
 }
 
 export function handleAddResource(event: Event): void {
@@ -116,6 +112,7 @@ export function handleAddResource(event: Event): void {
   if (!resourceAlreadySelected(resourceType, resourceTitle)) {
     addResourceToSelectedList(resourceType, resourceTitle);
   }
+  updateData();
 }
 
 export function handleClearAll(): void {
@@ -123,20 +120,49 @@ export function handleClearAll(): void {
     productElement.remove();
   });
   removeAllResourcesFromCookie();
-  updateResourceCount();
-  updatePricing();
+  updateData();
 }
 
 function createResourceRow(product: Product): string {
   const { type, title, quantity, quantityA3, quantityA2 } = product;
   return `
-    <div class="order-summary_row" >
       <div class="order-summary_cell main">${title}</div>
       <div class="order-summary_cell">${type}</div>
       <div class="order-summary_cell">${type === 'Infographie' ? `A3: ${quantityA3} <br> A2: ${quantityA2}` : `${quantity}`}</div>
       <div class="order-summary_cell price">${getResourcePricing(product)}.-</div>
-    </div>
   `;
+}
+
+function getEmailContent(products: Product[]): string {
+  let emailContent = `
+    <table style="border-collapse: collapse; color: black;">
+      <tr>
+        <th style="padding: 8px; border: 1px solid black;text-align: left;">Type</th>
+        <th style="padding: 8px; border: 1px solid black;text-align: left;">Titre de la resource</th>
+        <th style="padding: 8px; border: 1px solid black;text-align: left;">Quantité</th>
+        <th style="padding: 8px; border: 1px solid black;text-align: left;">Prix</th>
+      </tr>
+  `;
+
+  products.map((product: Product) => {
+    const { type, title, quantity, quantityA3, quantityA2 } = product;
+    emailContent += `
+      <tr>
+        <td style="padding: 8px; border: 1px solid black;">${type}</td>
+        <td style="padding: 8px; border: 1px solid black;">${title}</td>
+        <td style="padding: 8px; border: 1px solid black;">${type === 'Infographie' ? `A3: ${quantityA3} <br> A2: ${quantityA2}` : `${quantity}`}</td>
+        <td style="padding: 8px; border: 1px solid black;">${getResourcePricing(product)}.-</td>
+      </tr>
+    `;
+  });
+  emailContent += `
+    <tr>
+      <td style="padding: 8px; border: 1px solid black; text-align: right; font-weight: bold;">${parseInt(getPricing()) + 9} (frais de port inclus)</td>
+    </tr>`;
+
+  emailContent += `</table>`;
+
+  return emailContent;
 }
 
 export function handleNextStep(): void {
@@ -147,45 +173,37 @@ export function handleNextStep(): void {
   const summaryContent = document.querySelector(
     '[data-nmra-element="summary-content"]'
   ) as HTMLElement;
-  const summaryWrapper = document.querySelector(
-    '[data-nmra-element="summary-wrapper"]'
-  ) as HTMLElement;
 
-  if (totalPricing) {
-    totalPricing.textContent = `${parseInt(getPricing()) + 9}.- CHF`;
-  }
+  if (getResourceCount() > 0 && checkQuantities()) {
+    if (totalPricing) {
+      totalPricing.textContent = `${parseInt(getPricing()) + 9}.- CHF`;
+    }
 
-  if (step1Div && step2Div) {
-    step1Div.style.display = 'none';
-    step2Div.style.display = 'block';
+    if (step1Div && step2Div) {
+      step1Div.style.display = 'none';
+      step2Div.style.display = 'block';
 
-    const products = getCookie('selectedProducts') || [];
-    // let emailContent = `Prix : ${getPricing()} CHF\n+9 CHF de frais de port\n\nProduits sélectionnés:\n`;
+      const products = getCookie('selectedProducts') || [];
 
-    products.map((product: Product) => {
-      // const { type, title, quantity, quantityA3, quantityA2 } = product;
-      const productElement = document.createElement('div');
-      productElement.classList.add('order-summary_row');
-      productElement.innerHTML = createResourceRow(product);
-      summaryContent.appendChild(productElement);
+      products.map((product: Product) => {
+        const productElement = document.createElement('div');
+        productElement.classList.add('order-summary_row');
+        productElement.innerHTML = createResourceRow(product);
+        summaryContent.appendChild(productElement);
+      });
 
-      // if (type === 'Infographie') {
-      //   emailContent += `${type}: ${title} - A3: ${quantityA3} - A2: ${quantityA2}\n`;
-      // } else {
-      //   emailContent += `${type}: ${title} - Quantité: ${quantity}\n`;
-      // }
-    });
-
-    if (textarea) {
-      textarea.value = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@numeraswiss/minds-order-form@latest/dist/emailstyle.css">\n${summaryWrapper.innerHTML}`;
-      textarea.disabled = true;
+      if (textarea) {
+        textarea.value = getEmailContent(products);
+        textarea.disabled = true;
+      }
     }
   }
 }
 
 export function handlePreviousStep(): void {
-  const step1Div = document.querySelector('[data-nmra-action="step1"]') as HTMLElement;
-  const step2Div = document.querySelector('[data-nmra-action="step2"]') as HTMLElement;
+  const step1Div = document.querySelector('[data-nmra-element="step1"]') as HTMLElement;
+  const step2Div = document.querySelector('[data-nmra-element="step2"]') as HTMLElement;
+
   if (step1Div && step2Div) {
     step1Div.style.display = 'block';
     step2Div.style.display = 'none';

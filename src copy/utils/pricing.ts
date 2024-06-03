@@ -44,31 +44,3 @@ export function getPricing(): string {
 
   return total.toString();
 }
-
-export function updateSelectedProductsMessage(): void {
-  const selectedProductsWrapper = document.querySelector('[data-selected-products]') as HTMLElement;
-  const selectedProductElements = selectedProductsWrapper.querySelectorAll('.selected-product');
-  const selectedProductCount = document.querySelector(
-    '[data-selected-product-count]'
-  ) as HTMLElement;
-  const nextStepButtons = document.querySelectorAll(
-    '[data-action="next-step"]'
-  ) as NodeListOf<HTMLButtonElement>;
-
-  const productCount = selectedProductElements.length;
-  const disabled = productCount === 0;
-
-  nextStepButtons?.forEach((element) => {
-    if (disabled) {
-      element.classList.add('is-disabled');
-      element.setAttribute('disabled', disabled.toString());
-    } else {
-      element.classList.remove('is-disabled');
-      element.removeAttribute('disabled');
-    }
-  });
-  selectedProductCount.innerHTML =
-    productCount === 0
-      ? '<span>Aucune ressource sélectionnée</span>'
-      : `<span class="product-count">${productCount}</span> ressource${productCount > 1 ? 's' : ''} sélectionnée${productCount > 1 ? 's' : ''}`;
-}

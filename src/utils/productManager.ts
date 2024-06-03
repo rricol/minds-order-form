@@ -5,7 +5,6 @@ import {
   handleInscrease,
   handleRemove,
 } from './handlersFunctions';
-import { updatePricing, updateResourceCount } from './updateFunctions';
 
 export function addResourceToSelectedList(
   productType: string,
@@ -85,7 +84,5 @@ export function addResourceToSelectedList(
     input.addEventListener('change', handleInputChange);
   });
 
-  updateResourceCount();
   updateCookie();
-  updatePricing();
 }

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { addResourceToSelectedList } from './productManager';
 import type { Product } from './type';
-import { updatePricing, updateResourceCount } from './updateFunctions';
 
 export function setCookie(name: string, value: any, days: number): void {
   const date = new Date();
@@ -25,12 +24,10 @@ export function removeResourceFromCookie(productType: string, productTitle: stri
     (product) => !(product.type === productType && product.title === productTitle)
   );
   setCookie('selectedProducts', products, 7);
-  updatePricing();
 }
 
 export function removeAllResourcesFromCookie(): void {
   setCookie('selectedProducts', [], 7);
-  updatePricing();
 }
 
 export function loadResourcesFromCookie(): void {
@@ -44,8 +41,6 @@ export function loadResourcesFromCookie(): void {
       product.quantityA2
     )
   );
-  updatePricing();
-  updateResourceCount();
 }
 
 export function updateCookie(): void {

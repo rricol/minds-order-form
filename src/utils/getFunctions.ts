@@ -33,3 +33,8 @@ export function getResourcePricing(product: Product): number {
 
   return 0;
 }
+
+export function getResourceCount(): number {
+  const products: Product[] = getCookie('selectedProducts') || [];
+  return products.length;
+}

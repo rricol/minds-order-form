@@ -1,4 +1,6 @@
 import { getCookie, setCookie } from './cookieManager';
+import { getResourceCount } from './getFunctions';
+import { checkQuantities } from './stepsManager';
 import type { Product } from './type';
 
 export function updatePricing(): void {
@@ -26,26 +28,15 @@ export function updateResourceCount(): void {
   ) as HTMLElement;
   const selectedProductElements = selectedProductsWrapper.querySelectorAll('.selected-product');
   const selectedProductCount = document.querySelector('[data-nmra-element="count"]') as HTMLElement;
-  const nextStepButtons = document.querySelectorAll(
-    '[data-nmra-action="next-step"]'
-  ) as NodeListOf<HTMLButtonElement>;
+  const cartCount = document.querySelector('[data-nmra-element="cart-count"]') as HTMLElement;
 
   const productCount = selectedProductElements.length;
-  const disabled = productCount === 0;
 
-  nextStepButtons?.forEach((element) => {
-    if (disabled) {
-      element.classList.add('is-disabled');
-      element.setAttribute('disabled', disabled.toString());
-    } else {
-      element.classList.remove('is-disabled');
-      element.removeAttribute('disabled');
-    }
-  });
   selectedProductCount.innerHTML =
     productCount === 0
       ? '<span>Aucune ressource sélectionnée</span>'
       : `<span class="product-count">${productCount}</span> ressource${productCount > 1 ? 's' : ''} sélectionnée${productCount > 1 ? 's' : ''}`;
+  cartCount.textContent = productCount.toString();
 }
 
 export function updateResourceQuantityInCookie(
@@ -71,4 +62,27 @@ export function updateResourceQuantityInCookie(
     setCookie('selectedProducts', products, 7);
   }
   updatePricing();
+}
+
+export function updateNextStepButtons(): void {
+  const nextStepButtons = document.querySelectorAll(
+    '[data-nmra-action="next-step"]'
+  ) as NodeListOf<HTMLButtonElement>;
+  const disabled = getResourceCount() === 0 || !checkQuantities();
+
+  nextStepButtons?.forEach((element) => {
+    if (disabled) {
+      element.classList.add('is-disabled');
+      element.setAttribute('disabled', disabled.toString());
+    } else {
+      element.classList.remove('is-disabled');
+      element.removeAttribute('disabled');
+    }
+  });
+}
+
+export function updateData(): void {
+  updatePricing();
+  updateResourceCount();
+  updateNextStepButtons();
 }

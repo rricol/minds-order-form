@@ -1,34 +1,16 @@
 import { getCookie } from './cookieManager';
 import { handleNextStep, handlePreviousStep } from './handlersFunctions';
+import type { Product } from './type';
 
-interface Product {
-  type: string;
-  title: string;
-  quantity: number;
-  quantityA3?: number;
-  quantityA2?: number;
-}
-
-export function quantitiesAreSet(): boolean {
+export function checkQuantities(): boolean {
   const products: Product[] = getCookie('selectedProducts') || [];
-  if (
-    products.every(
-      (product) => product.quantity !== 0 && product.quantityA3 !== 0 && product.quantityA2 !== 0
-    )
-  ) {
-    // Check if any selectedProducts has all three possible quantity to 0
-    const orderProductSelectedWrapper = document.querySelector(
-      '.order_product-selected-wrapper'
-    ) as HTMLElement;
-    const alertDiv = document.createElement('div');
-    alertDiv.classList.add('alert-message');
-    alertDiv.textContent = "Certain produits n'ont pas de quantité sélectionnée.";
-    orderProductSelectedWrapper.insertBefore(alertDiv, orderProductSelectedWrapper.firstChild);
-
+  if (products.length === 0) {
     return false;
   }
-
-  return true;
+  return products.every(
+    (product) =>
+      product.quantity > 0 || (product.quantityA3 ?? 0) > 0 || (product.quantityA2 ?? 0) > 0
+  );
 }
 
 export function initSteps(): void {

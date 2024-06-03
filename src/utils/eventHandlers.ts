@@ -1,4 +1,9 @@
-import { handleAddResource, handleClearAll } from './handlersFunctions';
+import {
+  handleAddResource,
+  handleClearAll,
+  handleNextStep,
+  handlePreviousStep,
+} from './handlersFunctions';
 
 export function attachAddButtonEvents(): void {
   document.querySelectorAll('[data-nmra-action="add"]').forEach((button) => {
@@ -12,7 +17,15 @@ export function attachClearButtonEvents(): void {
   });
 }
 
-export function attachStepsButtonEvents(): void {}
+export function attachStepsButtonEvents(): void {
+  document.querySelectorAll('[data-nmra-action="next-step"]').forEach((button) => {
+    button.addEventListener('click', handleNextStep);
+  });
+
+  document.querySelectorAll('[data-nmra-action="previous-step"]').forEach((button) => {
+    button.addEventListener('click', handlePreviousStep);
+  });
+}
 // export function attachRemoveButtonEvents(): void {
 //   document.querySelectorAll('.remove-product').forEach((button) => {
 //     button.addEventListener('click', (event) => {
