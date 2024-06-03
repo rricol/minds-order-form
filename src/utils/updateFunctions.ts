@@ -23,14 +23,10 @@ export function updatePricing(): void {
 }
 
 export function updateResourceCount(): void {
-  const selectedProductsWrapper = document.querySelector(
-    '[data-nmra-element="list"]'
-  ) as HTMLElement;
-  const selectedProductElements = selectedProductsWrapper.querySelectorAll('.selected-product');
   const selectedProductCount = document.querySelector('[data-nmra-element="count"]') as HTMLElement;
   const cartCount = document.querySelector('[data-nmra-element="cart-count"]') as HTMLElement;
 
-  const productCount = selectedProductElements.length;
+  const productCount = getResourceCount();
 
   selectedProductCount.innerHTML =
     productCount === 0

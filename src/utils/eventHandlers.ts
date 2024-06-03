@@ -12,7 +12,7 @@ export function attachAddButtonEvents(): void {
 }
 
 export function attachClearButtonEvents(): void {
-  document.querySelectorAll('[data-action="clear"]').forEach((button) => {
+  document.querySelectorAll('[data-nmra-action="clear"]').forEach((button) => {
     button.addEventListener('click', handleClearAll);
   });
 }
