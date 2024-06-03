@@ -1,20 +1,10 @@
-import { loadProductsFromCookie } from './utils/cookieManager';
-import {
-  attachAddButtonEvents,
-  attachClearButtonEvents,
-  attachQuantityChangeEvents,
-  attachRemoveButtonEvents,
-} from './utils/eventHandlers';
-import { calculatePricing, updateSelectedProductsMessage } from './utils/pricing';
+import { loadResourcesFromCookie } from './utils/cookieManager';
+import { attachAddButtonEvents, attachClearButtonEvents } from './utils/eventHandlers';
 import { initSteps } from './utils/stepsManager';
 
 document.addEventListener('DOMContentLoaded', () => {
-  loadProductsFromCookie();
-  updateSelectedProductsMessage();
-  calculatePricing();
+  loadResourcesFromCookie();
   attachAddButtonEvents();
-  attachRemoveButtonEvents();
-  attachQuantityChangeEvents();
   attachClearButtonEvents();
   initSteps();
 });

@@ -1,0 +1,52 @@
+.order-summary_cell {
+    display: flex;
+    min-width: 15%;
+    padding: 1rem;
+    justify-content: center;
+    align-items: stretch;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+    border-left: solid 1px #858585;
+  }
+
+  .order-summary_cell.main {
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
+    border-left: none;
+  }
+
+  .order-summary_row {
+    display: flex;
+    border: solid 1px #858585;
+  }
+
+  .order-summary_row.is-header {
+    font-weight: 600;
+  }
+
+  .order-summary_row.last {
+    justify-content: flex-end;
+    align-items: stretch;
+    border: none;
+  }
+
+  .order-summary_cell.taxes {
+    border-bottom: solid 2px black;
+    border-left: none;
+  }
+
+  .order-summary_cell.price.taxes {
+    border-left: solid 1px #858585;
+  }
+
+  .order-summary_cell.price.total {
+    font-weight: 600;
+  }
+
+  .order-summary_cell.no-border {
+    border-left: none;
+  }

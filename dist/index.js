@@ -1,45 +1,409 @@
-"use strict";(()=>{function d(){let a=p("selectedProducts")||[],t=0;a.forEach(e=>{let{type:o,quantity:r,quantityA3:s=0,quantityA2:u=0}=e;o==="Infographie"?t+=u*6+s*(s<10?4:3):o==="Brochure"?t+=r*(r<10?9:r<30?8:7):o==="Publication"&&(t+=r*(r<5?16:r<10?14:13))});let n=document.querySelector("[data-count-total]");n.innerHTML=t.toString()}function x(){let a=p("selectedProducts")||[],t=0;return a.forEach(n=>{let{type:e,quantity:o,quantityA3:r=0,quantityA2:s=0}=n;e==="Infographie"?t+=s*6+r*(r<10?4:3):e==="Brochure"?t+=o*(o<10?9:o<30?8:7):e==="Publication"&&(t+=o*(o<5?16:o<10?14:13))}),t.toString()}function m(){let t=document.querySelector("[data-selected-products]").querySelectorAll(".selected-product"),n=document.querySelector("[data-selected-product-count]"),e=document.querySelectorAll('[data-action="next-step"]'),o=t.length,r=o===0;e?.forEach(s=>{r?(s.classList.add("is-disabled"),s.setAttribute("disabled",r.toString())):(s.classList.remove("is-disabled"),s.removeAttribute("disabled"))}),n.innerHTML=o===0?"<span>Aucune ressource s\xE9lectionn\xE9e</span>":`<span class="product-count">${o}</span> ressource${o>1?"s":""} s\xE9lectionn\xE9e${o>1?"s":""}`}function v(a,t,n=1,e=0,o=0){let r=document.querySelector("[data-selected-products]"),s=document.createElement("div");s.classList.add("selected-product"),a==="Infographie"?s.innerHTML=`
-      <div class="selected-product-item">
-        <span class="text-size-small margin-bottom margin-tiny text-color-secondary">${a}</span>
-        <span class="text-weight-semibold margin-bottom margin-xxsmall">${t}</span>
-        <span class="text-size-tiny margin-bottom margin-tiny">Quantit\xE9s:</span>
-        <div class="selected-product_actions-wrapper">
-          <span class="selected-product_field-group">
-            <label>A3:</label>
-            <span>
-              <button class="quantity-change" data-action="decrease" data-format-name="A3">-</button>
-              <input class="quantity-input" type="number" data-format="A3" value="${e}" min="0">
-              <button class="quantity-change" data-action="increase" data-format-name="A3">+</button>
-            </span>
-          </span>
-          <span class="selected-product_field-group">
-            <label>A2:</label>
-            <span>
-              <button class="quantity-change" data-action="decrease" data-format-name="A2">-</button>
-              <input class="quantity-input" type="number" data-format="A2" value="${o}" min="0">
-              <button class="quantity-change" data-action="increase" data-format-name="A2">+</button>
-            </span>
-          </span>
-          <button class="remove-product text-size-small button is-link" data-action="remove">Supprimer</button>
-        </div>
-      </div>
-    `:s.innerHTML=`
-      <div class="selected-product-item">
-        <span class="text-size-small margin-bottom margin-tiny text-color-secondary">${a}</span>
-        <span class="text-weight-semibold margin-bottom margin-xxsmall">${t}</span>
-        <span class="text-size-tiny margin-bottom margin-tiny">Quantit\xE9s:</span>
-        <div class="selected-product_actions-wrapper">
-          <span>
-            <button class="quantity-change" data-action="decrease">-</button>
-            <input class="quantity-input" type="number" value="${n}" min="1">
-            <button class="quantity-change" data-action="increase">+</button>
-          </span>
-          <button class="remove-product text-size-small button is-link" data-action="remove">Supprimer</button>
-        </div>
-      </div>
-    `,r.appendChild(s),m(),S(),s.querySelector(".remove-product")?.addEventListener("click",u=>{let c=u.target.closest(".selected-product"),i=c.querySelector(".text-size-small")?.textContent,l=c.querySelector(".text-weight-semibold")?.textContent;i&&l&&(c.remove(),b(i,l),m(),d())}),s.querySelectorAll(".quantity-change").forEach(u=>{u.addEventListener("click",c=>{let i=c.target.closest("span")?.querySelector("input"),l=isNaN(parseInt(i.value))?0:parseInt(i.value);c.target.getAttribute("data-action")==="increase"?i.value=(l+1).toString():c.target.getAttribute("data-action")==="decrease"&&l>0&&(i.value=(l-1).toString());let y=c.target.getAttribute("data-format-name"),g=s.querySelector(".text-size-small")?.textContent,q=s.querySelector(".text-weight-semibold")?.textContent;g&&q&&(f(g,q,y?{[y]:parseInt(i.value)}:{quantity:parseInt(i.value)}),d())})}),s.querySelectorAll(".quantity-input").forEach(u=>{u.addEventListener("change",c=>{let i=isNaN(parseInt(c.target.value))?0:parseInt(c.target.value),l=c.target.getAttribute("data-format"),y=u.closest(".selected-product-item")?.querySelector(".text-size-small")?.textContent,g=u.closest(".selected-product-item")?.querySelector(".text-weight-semibold")?.textContent;y&&g&&(i>=0?(f(y,g,l?{[l]:i}:{quantity:i}),d()):c.target.value="0")})}),m(),d()}function E(a,t,n){let e=new Date;e.setTime(e.getTime()+n*24*60*60*1e3),document.cookie=`${a}=${JSON.stringify(t)};expires=${e.toUTCString()};path=/`}function p(a){let t=`${a}=`,n=document.cookie.split(";");for(let e=0;e<n.length;e++){let o=n[e].trim();if(o.indexOf(t)===0)return JSON.parse(o.substring(t.length))}return null}function f(a,t,n){let e=p("selectedProducts")||[],o=e.findIndex(r=>r.type===a&&r.title===t);o!==-1&&(n.quantity!==void 0&&(e[o].quantity=n.quantity),n.A3!==void 0&&(e[o].quantityA3=n.A3),n.A2!==void 0&&(e[o].quantityA2=n.A2),E("selectedProducts",e,7)),d()}function b(a,t){let n=p("selectedProducts")||[];n=n.filter(e=>!(e.type===a&&e.title===t)),E("selectedProducts",n,7),d()}function A(){E("selectedProducts",[],7),d()}function T(){(p("selectedProducts")||[]).forEach(t=>v(t.type,t.title,t.quantity,t.quantityA3,t.quantityA2))}function S(){let t=document.querySelector("[data-selected-products]").querySelectorAll(".selected-product"),n=Array.from(t).map(e=>{let o=e.querySelector(".text-size-small")?.textContent,r=e.querySelector(".text-weight-semibold")?.textContent,s=o==="Infographie"?0:parseInt(e.querySelector(".quantity-input").value),u=o==="Infographie"?parseInt(e.querySelector('[data-format="A3"]').value):0,c=o==="Infographie"?parseInt(e.querySelector('[data-format="A2"]').value):0;return{type:o,title:r,quantity:s,quantityA3:u,quantityA2:c}});E("selectedProducts",n,7)}function L(){document.querySelectorAll('[data-action="add"]').forEach(a=>{a.addEventListener("click",t=>{let n=t.target.closest("[data-product-type]"),e=n.getAttribute("data-product-type"),o=n.querySelector("h3")?.innerText;H(e,o)||v(e,o)})})}function H(a,t){return(p("selectedProducts")||[]).some(e=>e.type===a&&e.title===t)}function h(){document.querySelectorAll('[data-action="clear"]').forEach(a=>{a.addEventListener("click",()=>{document.querySelectorAll(".selected-product").forEach(t=>{t.remove()}),A(),m()})})}function P(){document.querySelectorAll(".remove-product").forEach(a=>{a.addEventListener("click",t=>{let n=t.target.closest(".selected-product"),e=n.querySelector(".text-size-small")?.textContent,o=n.querySelector(".text-weight-semibold")?.textContent;e&&o&&(n.remove(),b(e,o),m())})})}function M(){document.querySelectorAll(".quantity-change").forEach(a=>{a.addEventListener("click",t=>{let n=t.target.closest("span")?.querySelector("input"),e=isNaN(parseInt(n.value))?0:parseInt(n.value);t.target.getAttribute("data-action")==="increase"?n.value=(e+1).toString():t.target.getAttribute("data-action")==="decrease"&&e>0&&(n.value=(e-1).toString());let o=t.target.getAttribute("data-format-name"),r=n.closest(".selected-product-item")?.querySelector(".text-size-small")?.textContent,s=n.closest(".selected-product-item")?.querySelector(".text-weight-semibold")?.textContent;r&&s&&f(r,s,o?{[o]:parseInt(n.value)}:{quantity:parseInt(n.value)})})}),document.querySelectorAll(".quantity-input").forEach(a=>{a.addEventListener("change",t=>{let n=isNaN(parseInt(t.target.value))?0:parseInt(t.target.value),e=t.target.getAttribute("data-format"),o=a.closest(".selected-product-item")?.querySelector(".text-size-small")?.textContent,r=a.closest(".selected-product-item")?.querySelector(".text-weight-semibold")?.textContent;o&&r&&(n>=0?f(o,r,e?{[e]:n}:{quantity:n}):t.target.value="0")})})}function C(){let a=document.querySelector('[data-step="1"]'),t=document.querySelector('[data-step="2"]'),n=document.querySelectorAll('[data-action="next-step"]'),e=document.querySelector("#previous-to-step-1"),o=document.querySelector("[data-text-area]");t.style.display="none",n&&n.forEach(r=>{r.addEventListener("click",()=>{if(a&&t&&!r.hasAttribute("disabled")){a.style.display="none",t.style.display="block";let s=p("selectedProducts")||[];if(s.every(c=>c.quantity===0&&c.quantityA3===0&&c.quantityA2===0)){let c=document.querySelector(".order_product-selected-wrapper"),i=document.createElement("div");i.classList.add("alert-message"),i.textContent="Certain produits n'ont pas de quantit\xE9 s\xE9lectionn\xE9e.",c.insertBefore(i,c.firstChild);return}let u=`Prix : ${x()} CHF
-+9 CHF de frais de port
+"use strict";
+(() => {
+  // bin/live-reload.js
+  new EventSource(`${"http://localhost:3000"}/esbuild`).addEventListener("change", () => location.reload());
 
-Produits s\xE9lectionn\xE9s:
-`;u+=s.map(c=>{let{type:i,title:l,quantity:y,quantityA3:g,quantityA2:q}=c;return i==="Infographie"?`${i}: ${l} - A3: ${g} - A2: ${q}`:`${i}: ${l} - Quantit\xE9: ${y}`}).join(`
-`),o&&(o.value=u,o.disabled=!0)}})}),e&&e.addEventListener("click",()=>{a&&t&&(t.style.display="none",a.style.display="block")})}document.addEventListener("DOMContentLoaded",()=>{T(),m(),d(),L(),P(),M(),h(),C()});})();
+  // src/utils/getFunctions.ts
+  function getPricing() {
+    const products = getCookie("selectedProducts") || [];
+    let total = 0;
+    products.forEach((product) => {
+      const { type, quantity, quantityA3 = 0, quantityA2 = 0 } = product;
+      if (type === "Infographie") {
+        total += quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
+      } else if (type === "Brochure") {
+        total += quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
+      } else if (type === "Publication") {
+        total += quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
+      }
+    });
+    return total.toString();
+  }
+  function getResourcePricing(product) {
+    const { type, quantity, quantityA3 = 0, quantityA2 = 0 } = product;
+    if (type === "Infographie") {
+      return quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
+    }
+    if (type === "Brochure") {
+      return quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
+    }
+    if (type === "Publication") {
+      return quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
+    }
+    return 0;
+  }
+
+  // src/utils/updateFunctions.ts
+  function updatePricing() {
+    const products = getCookie("selectedProducts") || [];
+    let total = 0;
+    products.forEach((product) => {
+      const { type, quantity, quantityA3 = 0, quantityA2 = 0 } = product;
+      if (type === "Infographie") {
+        total += quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
+      } else if (type === "Brochure") {
+        total += quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
+      } else if (type === "Publication") {
+        total += quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
+      }
+    });
+    const countTotalElement = document.querySelector('[data-nmra-element="total"]');
+    countTotalElement.textContent = total.toString();
+  }
+  function updateResourceCount() {
+    const selectedProductsWrapper = document.querySelector(
+      '[data-nmra-element="list"]'
+    );
+    const selectedProductElements = selectedProductsWrapper.querySelectorAll(".selected-product");
+    const selectedProductCount = document.querySelector('[data-nmra-element="count"]');
+    const nextStepButtons = document.querySelectorAll(
+      '[data-nmra-action="next-step"]'
+    );
+    const productCount = selectedProductElements.length;
+    const disabled = productCount === 0;
+    nextStepButtons?.forEach((element) => {
+      if (disabled) {
+        element.classList.add("is-disabled");
+        element.setAttribute("disabled", disabled.toString());
+      } else {
+        element.classList.remove("is-disabled");
+        element.removeAttribute("disabled");
+      }
+    });
+    selectedProductCount.innerHTML = productCount === 0 ? "<span>Aucune ressource s\xE9lectionn\xE9e</span>" : `<span class="product-count">${productCount}</span> ressource${productCount > 1 ? "s" : ""} s\xE9lectionn\xE9e${productCount > 1 ? "s" : ""}`;
+  }
+  function updateResourceQuantityInCookie(productType, productTitle, quantities) {
+    const products = getCookie("selectedProducts") || [];
+    const productIndex = products.findIndex(
+      (product) => product.type === productType && product.title === productTitle
+    );
+    if (productIndex !== -1) {
+      if (quantities.quantity !== void 0) {
+        products[productIndex].quantity = quantities.quantity;
+      }
+      if (quantities.A3 !== void 0) {
+        products[productIndex].quantityA3 = quantities.A3;
+      }
+      if (quantities.A2 !== void 0) {
+        products[productIndex].quantityA2 = quantities.A2;
+      }
+      setCookie("selectedProducts", products, 7);
+    }
+    updatePricing();
+  }
+
+  // src/utils/handlersFunctions.ts
+  function resourceAlreadySelected(productType, productTitle) {
+    const products = getCookie("selectedProducts") || [];
+    return products.some(
+      (product) => product.type === productType && product.title === productTitle
+    );
+  }
+  function handleRemove(event) {
+    const productElement = event.target.closest(".selected-product");
+    const productType = productElement.querySelector(".nmra-resource_type")?.textContent;
+    const productTitle = productElement.querySelector(".nmra-resource_name")?.textContent;
+    if (productType && productTitle) {
+      productElement.remove();
+      removeResourceFromCookie(productType, productTitle);
+      updateResourceCount();
+      updatePricing();
+    }
+  }
+  function handleInscrease(event) {
+    const input = event.target.closest(".nmra-resource_quantity-group")?.querySelector("input");
+    const format = input.getAttribute("data-nmra-format");
+    const resourceType = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_type")?.textContent;
+    const resourceName = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_name");
+    const currentQuantity = isNaN(parseInt(input.value)) ? 0 : parseInt(input.value);
+    input.value = (currentQuantity + 1).toString();
+    if (resourceType && resourceName) {
+      updateResourceQuantityInCookie(
+        resourceType,
+        resourceName.textContent,
+        format ? { [format]: parseInt(input.value) } : { quantity: parseInt(input.value) }
+      );
+      updatePricing();
+    }
+  }
+  function handleDecrease(event) {
+    const input = event.target.closest(".nmra-resource_quantity-group")?.querySelector("input");
+    const format = input.getAttribute("data-nmra-format");
+    const resourceType = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_type")?.textContent;
+    const resourceName = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_name");
+    const currentQuantity = isNaN(parseInt(input.value)) ? 0 : parseInt(input.value);
+    if (currentQuantity > 0) {
+      input.value = (currentQuantity - 1).toString();
+    }
+    if (resourceType && resourceName) {
+      updateResourceQuantityInCookie(
+        resourceType,
+        resourceName.textContent,
+        format ? { [format]: parseInt(input.value) } : { quantity: parseInt(input.value) }
+      );
+      updatePricing();
+    }
+  }
+  function handleInputChange(event) {
+    const input = event.target;
+    const newQuantity = isNaN(parseInt(input.value)) ? 0 : parseInt(input.value);
+    const format = input.getAttribute("data-nmra-format");
+    const resourceType = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_type")?.textContent;
+    const resourceName = input.closest('[data-nmra-element="card"]')?.querySelector(".nmra-resource_name");
+    if (resourceType && resourceName) {
+      if (newQuantity >= 0) {
+        updateResourceQuantityInCookie(
+          resourceType,
+          resourceName.textContent,
+          format ? { [format]: newQuantity } : { quantity: newQuantity }
+        );
+      } else {
+        input.value = "0";
+      }
+      updatePricing();
+    }
+  }
+  function handleAddResource(event) {
+    const productElement = event.target.closest(
+      '[data-nmra-element="resource"]'
+    );
+    const titleElement = productElement.querySelector('[data-nmra-element="title"]');
+    const resourceTitle = titleElement?.innerText;
+    const resourceType = titleElement.getAttribute("data-nmra-type");
+    if (!resourceAlreadySelected(resourceType, resourceTitle)) {
+      addResourceToSelectedList(resourceType, resourceTitle);
+    }
+  }
+  function handleClearAll() {
+    document.querySelectorAll(".selected-product").forEach((productElement) => {
+      productElement.remove();
+    });
+    removeAllResourcesFromCookie();
+    updateResourceCount();
+    updatePricing();
+  }
+  function createResourceRow(product) {
+    const { type, title, quantity, quantityA3, quantityA2 } = product;
+    return `
+    <div class="order-summary_row" >
+      <div class="order-summary_cell main">${title}</div>
+      <div class="order-summary_cell">${type}</div>
+      <div class="order-summary_cell">${type === "Infographie" ? `A3: ${quantityA3} <br> A2: ${quantityA2}` : `${quantity}`}</div>
+      <div class="order-summary_cell price">${getResourcePricing(product)}.-</div>
+    </div>
+  `;
+  }
+  function handleNextStep() {
+    const step1Div = document.querySelector('[data-nmra-element="step1"]');
+    const step2Div = document.querySelector('[data-nmra-element="step2"]');
+    const textarea = document.querySelector('[data-nmra-element="text-area"]');
+    const totalPricing = document.querySelector('[data-nmra-element="total-price"]');
+    const summaryContent = document.querySelector(
+      '[data-nmra-element="summary-content"]'
+    );
+    const summaryWrapper = document.querySelector(
+      '[data-nmra-element="summary-wrapper"]'
+    );
+    if (totalPricing) {
+      totalPricing.textContent = `${parseInt(getPricing()) + 9}.- CHF`;
+    }
+    if (step1Div && step2Div) {
+      step1Div.style.display = "none";
+      step2Div.style.display = "block";
+      const products = getCookie("selectedProducts") || [];
+      products.map((product) => {
+        const productElement = document.createElement("div");
+        productElement.classList.add("order-summary_row");
+        productElement.innerHTML = createResourceRow(product);
+        summaryContent.appendChild(productElement);
+      });
+      if (textarea) {
+        textarea.value = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@numeraswiss/minds-order-form@latest/dist/emailstyle.css">
+${summaryWrapper.innerHTML}`;
+        textarea.disabled = true;
+      }
+    }
+  }
+  function handlePreviousStep() {
+    const step1Div = document.querySelector('[data-nmra-action="step1"]');
+    const step2Div = document.querySelector('[data-nmra-action="step2"]');
+    if (step1Div && step2Div) {
+      step1Div.style.display = "block";
+      step2Div.style.display = "none";
+    }
+  }
+
+  // src/utils/productManager.ts
+  function addResourceToSelectedList(productType, productTitle, quantity = 1, quantityA3 = 0, quantityA2 = 0) {
+    const selectedProductsWrapper = document.querySelector(
+      '[data-nmra-element="list"]'
+    );
+    const selectedProductElement = document.createElement("div");
+    selectedProductElement.classList.add("selected-product");
+    if (productType === "Infographie") {
+      selectedProductElement.innerHTML = `
+      <div class="selected-product-item" data-nmra-element="card">
+        <span class="nmra-resource_type" >${productType}</span>
+        <span class="nmra-resource_name">${productTitle}</span>
+        <span class="nmra-resource_quantity-title">Quantit\xE9s:</span>
+        <div class="nmra-resource_quantity-wrapper">
+          <div class="nmra-resource_quantity-group">
+            <label class="nmra-resource-format">A3:</label>
+            <input class="quantity-input" type="number" data-nmra-format="A3" value="${quantityA3}" min="0">
+            <div class="quantity-button_wrapper">
+              <button class="quantity-change" data-nmra-action="decrease">-</button>
+              <button class="quantity-change" data-nmra-action="increase">+</button>
+            </div>
+          </div>
+          <div class="nmra-resource_quantity-group">
+            <label class="nmra-resource-format">A2:</label>
+            <input class="quantity-input" type="number" data-nmra-format="A2" value="${quantityA2}" min="0">
+            <div class="quantity-button_wrapper">
+              <button class="quantity-change" data-nmra-action="decrease">-</button>
+              <button class="quantity-change" data-nmra-action="increase">+</button>
+            </div>
+          </div>
+          <button class="remove-product" data-nmra-action="remove">Supprimer</button>
+        </div>
+      </div>
+    `;
+    } else {
+      selectedProductElement.innerHTML = `
+    <div class="selected-product-item" data-nmra-element="card">
+        <span class="nmra-resource_type">${productType}</span>
+        <span class="nmra-resource_name">${productTitle}</span>
+        <span class="nmra-resource_quantity-title">Quantit\xE9s :</span>
+        <div class="nmra-resource_quantity-wrapper">
+          <div class="nmra-resource_quantity-group">
+            <input class="quantity-input" type="number" value="${quantity}" min="1">
+            <div class="quantity-button_wrapper">
+              <button class="quantity-change" data-nmra-action="decrease">-</button>
+              <button class="quantity-change" data-nmra-action="increase">+</button>
+            </div>
+          </div>
+          <button class="remove-product" data-nmra-action="remove">Supprimer</button>
+        </div>
+      </div>
+    `;
+    }
+    selectedProductsWrapper.appendChild(selectedProductElement);
+    selectedProductElement.querySelector('[data-nmra-action="remove"]')?.addEventListener("click", handleRemove);
+    selectedProductElement.querySelectorAll('[data-nmra-action="increase"]').forEach((button) => {
+      button.addEventListener("click", handleInscrease);
+    });
+    selectedProductElement.querySelectorAll('[data-nmra-action="decrease"]').forEach((button) => {
+      button.addEventListener("click", handleDecrease);
+    });
+    selectedProductElement.querySelectorAll(".quantity-input").forEach((input) => {
+      input.addEventListener("change", handleInputChange);
+    });
+    updateResourceCount();
+    updateCookie();
+    updatePricing();
+  }
+
+  // src/utils/cookieManager.ts
+  function setCookie(name, value, days) {
+    const date = /* @__PURE__ */ new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1e3);
+    document.cookie = `${name}=${JSON.stringify(value)};expires=${date.toUTCString()};path=/`;
+  }
+  function getCookie(name) {
+    const nameEQ = `${name}=`;
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      const c = ca[i].trim();
+      if (c.indexOf(nameEQ) === 0)
+        return JSON.parse(c.substring(nameEQ.length));
+    }
+    return null;
+  }
+  function removeResourceFromCookie(productType, productTitle) {
+    let products = getCookie("selectedProducts") || [];
+    products = products.filter(
+      (product) => !(product.type === productType && product.title === productTitle)
+    );
+    setCookie("selectedProducts", products, 7);
+    updatePricing();
+  }
+  function removeAllResourcesFromCookie() {
+    setCookie("selectedProducts", [], 7);
+    updatePricing();
+  }
+  function loadResourcesFromCookie() {
+    const products = getCookie("selectedProducts") || [];
+    products.forEach(
+      (product) => addResourceToSelectedList(
+        product.type,
+        product.title,
+        product.quantity,
+        product.quantityA3,
+        product.quantityA2
+      )
+    );
+    updatePricing();
+    updateResourceCount();
+  }
+  function updateCookie() {
+    const selectedProductsWrapper = document.querySelector(
+      '[data-nmra-element="list"]'
+    );
+    const selectedProductElements = selectedProductsWrapper.querySelectorAll(".selected-product");
+    const products = Array.from(selectedProductElements).map((productElement) => {
+      const productType = productElement.querySelector(".nmra-resource_type")?.textContent;
+      const productTitle = productElement.querySelector(".nmra-resource_name")?.textContent;
+      const quantity = productType === "Infographie" ? 0 : parseInt(productElement.querySelector(".quantity-input").value);
+      const quantityA3 = productType === "Infographie" ? parseInt(
+        productElement.querySelector('[data-nmra-format="A3"]').value
+      ) : 0;
+      const quantityA2 = productType === "Infographie" ? parseInt(
+        productElement.querySelector('[data-nmra-format="A2"]').value
+      ) : 0;
+      return { type: productType, title: productTitle, quantity, quantityA3, quantityA2 };
+    });
+    setCookie("selectedProducts", products, 7);
+  }
+
+  // src/utils/eventHandlers.ts
+  function attachAddButtonEvents() {
+    document.querySelectorAll('[data-nmra-action="add"]').forEach((button) => {
+      button.addEventListener("click", handleAddResource);
+    });
+  }
+  function attachClearButtonEvents() {
+    document.querySelectorAll('[data-action="clear"]').forEach((button) => {
+      button.addEventListener("click", handleClearAll);
+    });
+  }
+
+  // src/utils/stepsManager.ts
+  function initSteps() {
+    const step2Div = document.querySelector('[data-nmra-element="step2"]');
+    const nextStepButtons = document.querySelectorAll(
+      '[data-nmra-action="next-step"]'
+    );
+    const previousStepButton = document.querySelectorAll(
+      '[data-nmra-action="previous-step"]'
+    );
+    step2Div.style.display = "none";
+    if (nextStepButtons) {
+      nextStepButtons.forEach((button) => {
+        button.addEventListener("click", handleNextStep);
+      });
+    }
+    if (previousStepButton) {
+      previousStepButton.forEach((button) => {
+        button.addEventListener("click", handlePreviousStep);
+      });
+    }
+  }
+
+  // src/index.ts
+  document.addEventListener("DOMContentLoaded", () => {
+    loadResourcesFromCookie();
+    attachAddButtonEvents();
+    attachClearButtonEvents();
+    initSteps();
+  });
+})();
+//# sourceMappingURL=index.js.map
