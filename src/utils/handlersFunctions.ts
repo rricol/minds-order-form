@@ -210,17 +210,19 @@ export function handlePreviousStep(): void {
   }
 }
 
-function createToast(message: string): void {
+function createToast(message: string, addButton: boolean): void {
   const toast = document.createElement('div');
   toast.classList.add('toast-success');
   toast.textContent = message;
-  const button = document.createElement('button');
-  button.classList.add('button', 'is-secondary', 'is-small', 'is-alternate');
-  button.textContent = 'Aller au panier';
-  button.addEventListener('click', () => {
-    window.location.href = '/commander-wip';
-  });
-  toast.appendChild(button);
+  if (addButton) {
+    const button = document.createElement('button');
+    button.classList.add('button', 'is-secondary', 'is-small', 'is-alternate');
+    button.textContent = 'Aller au panier';
+    button.addEventListener('click', () => {
+      window.location.href = '/commander-wip';
+    });
+    toast.appendChild(button);
+  }
   document.body.appendChild(toast);
 
   setTimeout(() => {
@@ -245,8 +247,8 @@ export function handleAddRessourceToCart(): void {
       quantityA3: 0,
     };
     updateCart(product);
-    createToast('Ressource ajoutée au panier');
+    createToast('Ressource ajoutée au panier', true);
   } else {
-    createToast('La ressource est déjà dans le panier');
+    createToast('La ressource est déjà dans le panier', true);
   }
 }
