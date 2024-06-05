@@ -82,3 +82,9 @@ export function updateData(): void {
   updateResourceCount();
   updateNextStepButtons();
 }
+
+export function updateCart(Product: Product): void {
+  const products: Product[] = getCookie('selectedProducts') || [];
+  products.push(Product);
+  setCookie('selectedProducts', products, 7);
+}

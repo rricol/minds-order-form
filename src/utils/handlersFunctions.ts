@@ -3,7 +3,7 @@ import { getPricing, getResourceCount, getResourcePricing } from './getFunctions
 import { addResourceToSelectedList } from './productManager';
 import { checkQuantities } from './stepsManager';
 import type { Product } from './type';
-import { updateData, updateResourceQuantityInCookie } from './updateFunctions';
+import { updateCart, updateData, updateResourceQuantityInCookie } from './updateFunctions';
 
 function resourceAlreadySelected(productType: string, productTitle: string): boolean {
   const products = getCookie('selectedProducts') || [];
@@ -207,5 +207,46 @@ export function handlePreviousStep(): void {
   if (step1Div && step2Div) {
     step1Div.style.display = 'block';
     step2Div.style.display = 'none';
+  }
+}
+
+function createToast(message: string): void {
+  const toast = document.createElement('div');
+  toast.classList.add('toast-success');
+  toast.textContent = message;
+  const button = document.createElement('button');
+  button.classList.add('button', 'is-secondary', 'is-small', 'is-alternate');
+  button.textContent = 'Aller au panier';
+  button.addEventListener('click', () => {
+    window.location.href = '/commander-wip';
+  });
+  toast.appendChild(button);
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+
+  toast.addEventListener('click', () => {
+    toast.remove();
+  });
+}
+
+export function handleAddRessourceToCart(): void {
+  const titleElement = document.querySelector('[data-nmra-element="title"]') as HTMLElement;
+  const resourceTitle = titleElement?.innerText as string;
+  const resourceType = titleElement.getAttribute('data-nmra-type') as string;
+  if (!resourceAlreadySelected(resourceType, resourceTitle)) {
+    const product: Product = {
+      type: resourceType,
+      title: resourceTitle,
+      quantity: resourceType === 'Infographie' ? 1 : 0,
+      quantityA2: 0,
+      quantityA3: 0,
+    };
+    updateCart(product);
+    createToast('Ressource ajoutée au panier');
+  } else {
+    createToast('La ressource est déjà dans le panier');
   }
 }
