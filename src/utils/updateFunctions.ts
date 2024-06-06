@@ -88,3 +88,10 @@ export function updateCart(Product: Product): void {
   products.push(Product);
   setCookie('selectedProducts', products, 7);
 }
+
+export function updateCartMenu(): void {
+  document.querySelectorAll('[data-nmra-element="cart"]').forEach((element) => {
+    const count = element.querySelector('[data-nmra-element="cart-count"]');
+    if (count) count.textContent = getResourceCount().toString();
+  });
+}
