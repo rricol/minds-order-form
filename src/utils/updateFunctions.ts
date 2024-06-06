@@ -91,7 +91,6 @@ export function updateCart(Product: Product): void {
 
 export function updateCartMenu(): void {
   const carts = document.querySelectorAll('[data-nmra-element="cart"]');
-  console.log(carts);
   carts.forEach((element) => {
     const count = element.querySelector('[data-nmra-element="cart-count"]');
     if (count) count.textContent = getResourceCount().toString();
