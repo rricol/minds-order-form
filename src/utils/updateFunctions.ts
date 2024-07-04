@@ -48,7 +48,7 @@ export function updatePricing(): void {
     } else if (type === 'Publication') {
       total += quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
     } else if (type === 'Jeux') {
-      total += quantity * (quantity < 10 ? 8 : quantity < 30 ? 7 : 6);
+      total += quantity * 26;
     }
   });
 

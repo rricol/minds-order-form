@@ -23,6 +23,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
+bin
 # Production files
 # dist
