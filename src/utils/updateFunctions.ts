@@ -40,7 +40,7 @@ export function updatePricing(): void {
     if (type === 'Infographie') {
       total += quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
     } else if (type === 'Brochure') {
-      if (title === 'Une bonne santé mentale pour tout le monde c’est possible') {
+      if (title === 'Qui est minds ?') {
         total += quantity * 0;
       } else {
         total += quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
