@@ -58,7 +58,9 @@ export function updatePricing(): void {
 
 export function updateResourceCount(): void {
   const selectedProductCount = document.querySelector('[data-nmra-element="count"]') as HTMLElement;
-  const cartCount = document.querySelector('[data-nmra-element="cart-count"]') as HTMLElement;
+  const cartCount = document.querySelectorAll(
+    '[data-nmra-element="cart-count"]'
+  ) as NodeListOf<HTMLElement>;
 
   const productCount = getResourceCount();
 
@@ -66,7 +68,9 @@ export function updateResourceCount(): void {
     productCount === 0
       ? '<span>Aucune ressource sélectionnée</span>'
       : `<span class="product-count">${productCount}</span> ressource${productCount > 1 ? 's' : ''} sélectionnée${productCount > 1 ? 's' : ''}`;
-  cartCount.textContent = productCount.toString();
+  cartCount.forEach((element) => {
+    element.textContent = productCount.toString();
+  });
 }
 
 export function updateResourceQuantityInCookie(
