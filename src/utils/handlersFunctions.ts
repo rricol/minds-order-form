@@ -1,5 +1,5 @@
 import { getCookie, removeAllResourcesFromCookie, removeResourceFromCookie } from './cookieManager';
-import { getPricing, getResourceCount, getResourcePricing } from './getFunctions';
+import { getPricing, getResourceCount, getResourcePricing, getShipping } from './getFunctions';
 import { addResourceToSelectedList } from './productManager';
 import { checkQuantities } from './stepsManager';
 import type { Product } from './type';
@@ -157,7 +157,7 @@ function getEmailContent(products: Product[]): string {
   });
   emailContent += `
     <tr>
-      <td style="padding: 8px; border: 1px solid black; text-align: right; font-weight: bold;">${parseInt(getPricing()) + 9} (frais de port inclus)</td>
+      <td style="padding: 8px; border: 1px solid black; text-align: right; font-weight: bold;">${parseInt(getPricing()) + getShipping()} (frais de port inclus)</td>
     </tr>`;
 
   emailContent += `</table>`;
