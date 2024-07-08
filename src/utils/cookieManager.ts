@@ -5,7 +5,7 @@ import type { Product } from './type';
 export function setCookie(name: string, value: any, days: number): void {
   const date = new Date();
   date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${JSON.stringify(value)};expires=${date.toUTCString()};path=/`;
+  document.cookie = `${name}=${JSON.stringify(value)};expires=${date.toUTCString()};path=/;SameSite=Lax;Secure`;
 }
 
 export function getCookie(name: string): any {

@@ -30,7 +30,9 @@ export function getResourcePricing(product: Product): number {
   if (type === 'Publication') {
     return quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
   }
-
+  if (type === 'Jeux') {
+    return quantity * 26;
+  }
   return 0;
 }
 

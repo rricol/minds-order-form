@@ -25,10 +25,12 @@ export function updateShipping(): void {
   } else {
     shipping = 9;
   }
-  const countShippingElement = document.querySelector(
+  const countShippingElement = document.querySelectorAll(
     '[data-nmra-element="shipping"]'
-  ) as HTMLElement;
-  countShippingElement.textContent = shipping.toString();
+  ) as NodeListOf<HTMLElement>;
+  countShippingElement.forEach((element) => {
+    element.textContent = shipping.toString();
+  });
 }
 
 export function updatePricing(): void {
