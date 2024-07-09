@@ -20,7 +20,7 @@ export function updateShipping(): void {
   const totalJeux = products.reduce((acc, product) => {
     return product.type === 'Jeux' ? acc + product.quantity : acc;
   }, 0);
-  if (totalJeux <= 3 && totalBrochures <= 3 && totalInfographies === 0 && totalPublications === 0) {
+  if (totalJeux <= 3 && totalBrochures <= 3 && totalInfographies === 0 && totalPublications <= 1) {
     shipping = 0;
   } else {
     shipping = 9;
