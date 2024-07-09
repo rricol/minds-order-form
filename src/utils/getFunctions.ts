@@ -13,6 +13,8 @@ export function getPricing(): string {
       total += quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
     } else if (type === 'Publication') {
       total += quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
+    } else if (type === 'Jeux') {
+      total += quantity * 26;
     }
   });
 
