@@ -176,7 +176,7 @@ export function handleNextStep(): void {
 
   if (getResourceCount() > 0 && checkQuantities()) {
     if (totalPricing) {
-      totalPricing.textContent = `${parseInt(getPricing()) + 9}.- CHF`;
+      totalPricing.textContent = `${parseInt(getPricing()) + getShipping()}.- CHF`;
     }
 
     if (step1Div && step2Div) {
