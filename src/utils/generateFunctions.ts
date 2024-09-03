@@ -26,7 +26,7 @@ export function generateSummary() {
 }
 
 export function generateEmailContent() {
-  const textarea = document.querySelector('[data-nmra-element="text-area"]') as HTMLTextAreaElement;
+  const textarea = document.querySelector('[ns-mindsorder-textArea]') as HTMLTextAreaElement;
   const resources = getLocalStorage('orderList');
   let emailContent = `
       <table style="border-collapse: collapse; color: black;">

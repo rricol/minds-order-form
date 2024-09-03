@@ -33,16 +33,26 @@ export function getShipping(): number {
   const resources: Resource[] = JSON.parse(localStorage.getItem('orderList') || '[]');
   let shipping = 0;
   let totalQuantity = 0;
-  totalQuantity += resources.reduce((acc, resource) => {
+  const totalBrochure = resources.reduce((acc, resource) => {
     return resource.type === 'Brochure' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  totalQuantity += resources.reduce((acc, resource) => {
+  const totalInfographie = resources.reduce((acc, resource) => {
     return resource.type === 'Infographie' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  totalQuantity += resources.reduce((acc, resource) => {
+  const totalPublication = resources.reduce((acc, resource) => {
     return resource.type === 'Publication' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  if (totalQuantity > 1 && totalQuantity <= 9) {
+  const totalJeux = resources.reduce((acc, resource) => {
+    return resource.type === 'Jeux' ? acc + (resource.quantity ?? 0) : acc;
+  }, 0);
+  totalQuantity = totalBrochure + totalInfographie + totalPublication + totalJeux;
+  if (totalBrochure <= 3 && totalInfographie === 0 && totalPublication === 0 && totalJeux === 0) {
+    shipping = 0;
+  } else if (totalQuantity >= 4) {
+    shipping = 9;
+  } else if (totalQuantity === 1) {
+    shipping = 0;
+  } else {
     shipping = 9;
   }
 
