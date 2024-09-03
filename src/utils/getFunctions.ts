@@ -1,69 +1,50 @@
-import { getCookie } from './cookieManager';
-import type { Product } from './type';
+import type { Resource } from './types';
 
-export function getPricing(): string {
-  const products: Product[] = getCookie('selectedProducts') || [];
-  let total = 0;
-
-  products.forEach((product) => {
-    const { type, quantity, quantityA3 = 0, quantityA2 = 0 } = product;
-    if (type === 'Infographie') {
-      total += quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
-    } else if (type === 'Brochure') {
-      total += quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
-    } else if (type === 'Publication') {
-      total += quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
-    } else if (type === 'Jeux') {
-      total += quantity * 26;
-    }
-  });
-
-  return total.toString();
-}
-
-export function getResourcePricing(product: Product): number {
-  const { type, quantity, quantityA3 = 0, quantityA2 = 0 } = product;
+export function getResourcePricing(resource: Resource) {
+  const { type, title, quantity = 0 } = resource;
   if (type === 'Infographie') {
-    return quantityA2 * 6 + quantityA3 * (quantityA3 < 10 ? 4 : 3);
+    return quantity * 3;
   }
   if (type === 'Brochure') {
-    return quantity * (quantity < 10 ? 9 : quantity < 30 ? 8 : 7);
+    if (title === 'Qui est minds ?') return quantity * 0;
+    return quantity * 8;
   }
   if (type === 'Publication') {
-    return quantity * (quantity < 5 ? 16 : quantity < 10 ? 14 : 13);
+    return quantity * 22;
   }
   if (type === 'Jeux') {
-    return quantity * 26;
+    return quantity * 20;
   }
   return 0;
 }
 
-export function getResourceCount(): number {
-  const products: Product[] = getCookie('selectedProducts') || [];
-  return products.length;
+export function getRawPrice(): number {
+  const resources: Resource[] = JSON.parse(localStorage.getItem('orderList') || '[]');
+  let total = 0;
+
+  resources.forEach((resource) => {
+    total += getResourcePricing(resource);
+  });
+
+  return total;
 }
 
 export function getShipping(): number {
-  const products: Product[] = getCookie('selectedProducts') || [];
+  const resources: Resource[] = JSON.parse(localStorage.getItem('orderList') || '[]');
   let shipping = 0;
-  const totalBrochures = products.reduce((acc, product) => {
-    return product.type === 'Brochure' ? acc + product.quantity : acc;
+  let totalQuantity = 0;
+  totalQuantity += resources.reduce((acc, resource) => {
+    return resource.type === 'Brochure' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  const totalInfographies = products.reduce((acc, product) => {
-    return product.type === 'Infographie'
-      ? acc + (product.quantityA2 ?? 0) + (product.quantityA3 ?? 0)
-      : acc;
+  totalQuantity += resources.reduce((acc, resource) => {
+    return resource.type === 'Infographie' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  const totalPublications = products.reduce((acc, product) => {
-    return product.type === 'Publication' ? acc + product.quantity : acc;
+  totalQuantity += resources.reduce((acc, resource) => {
+    return resource.type === 'Publication' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
-  const totalJeux = products.reduce((acc, product) => {
-    return product.type === 'Jeux' ? acc + product.quantity : acc;
-  }, 0);
-  if (totalJeux <= 3 && totalBrochures <= 3 && totalInfographies === 0 && totalPublications <= 1) {
-    shipping = 0;
-  } else {
+  if (totalQuantity > 1 && totalQuantity <= 9) {
     shipping = 9;
   }
+
   return shipping;
 }

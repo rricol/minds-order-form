@@ -1,13 +1,22 @@
-import { updateData } from '$utils/updateFunctions';
+import { toast } from './utils/errorhandler';
+import { initCart, initOrderPage } from './utils/initFunctions';
+import { initiateLocalStorage } from './utils/localStorage';
 
-import { loadResourcesFromCookie } from './utils/cookieManager';
-import { attachAddButtonEvents, attachClearButtonEvents } from './utils/eventHandlers';
-import { initSteps } from './utils/stepsManager';
-
+// Note: Entry point for the application
 document.addEventListener('DOMContentLoaded', () => {
-  loadResourcesFromCookie();
-  attachAddButtonEvents();
-  attachClearButtonEvents();
-  updateData();
-  initSteps();
+  // check if LocalStorage is available
+  if (typeof Storage === 'undefined') {
+    toast('LocalStorage is not available');
+    return;
+  }
+  initiateLocalStorage();
+
+  const currentLocation = window.location;
+  const pageUrl = currentLocation.pathname.split('/')[1];
+
+  // check if it matches "/commander"
+  if (pageUrl === 'commander') {
+    initOrderPage();
+  }
+  initCart();
 });
