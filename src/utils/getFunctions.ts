@@ -46,7 +46,7 @@ export function getShipping(): number {
     return resource.type === 'Jeux' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
   totalQuantity = totalBrochure + totalInfographie + totalPublication + totalJeux;
-  if (totalBrochure <= 3 && totalInfographie === 0 && totalPublication === 0 && totalJeux === 0) {
+  if (totalBrochure <= 3 && totalBrochure === totalQuantity) {
     shipping = 0;
   } else if (totalQuantity >= 4) {
     shipping = 9;
