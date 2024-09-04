@@ -43,7 +43,6 @@
   }
   function getShipping() {
     const resources = JSON.parse(localStorage.getItem("orderList") || "[]");
-    let shipping = 0;
     let totalQuantity = 0;
     const totalBrochure = resources.reduce((acc, resource) => {
       return resource.type === "Brochure" ? acc + (resource.quantity ?? 0) : acc;
@@ -59,19 +58,21 @@
     }, 0);
     totalQuantity = totalBrochure + totalInfographie + totalPublication + totalJeux;
     if (totalBrochure < 4 && totalBrochure === totalQuantity) {
-      shipping = 0;
-    } else if (totalJeux < 4 && totalJeux === totalQuantity) {
-      shipping = 0;
-    } else if (totalBrochure < 4 && totalJeux < 4 && totalQuantity === totalBrochure + totalJeux) {
-      shipping = 0;
-    } else if (totalQuantity > 1 && totalQuantity < 10) {
-      shipping = 9;
-    } else if (totalQuantity === 1) {
-      shipping = 0;
-    } else {
-      shipping = 9;
+      return 0;
     }
-    return shipping;
+    if (totalJeux < 4 && totalJeux === totalQuantity) {
+      return 0;
+    }
+    if (totalBrochure < 4 && totalJeux < 4 && totalQuantity === totalBrochure + totalJeux) {
+      return 0;
+    }
+    if (totalQuantity > 1 && totalQuantity < 10) {
+      return 9;
+    }
+    if (totalQuantity === 1) {
+      return 0;
+    }
+    return 9;
   }
 
   // src/utils/generateFunctions.ts

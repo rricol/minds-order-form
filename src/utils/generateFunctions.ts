@@ -19,7 +19,6 @@ export function generateSummary() {
   const orderList = getLocalStorage('orderList');
   const totalPrice = getRawPrice() + getShipping();
   const totalElement = document.querySelector('[ns-mindsorder-priceTotal]');
-  console.log('total Price', totalPrice);
 
   if (totalElement) {
     totalElement.textContent = totalPrice.toString();
