@@ -46,10 +46,13 @@ export function getShipping(): number {
     return resource.type === 'Jeux' ? acc + (resource.quantity ?? 0) : acc;
   }, 0);
   totalQuantity = totalBrochure + totalInfographie + totalPublication + totalJeux;
-  console.log(totalQuantity, totalBrochure, totalInfographie, totalPublication, totalJeux);
   if (totalBrochure < 4 && totalBrochure === totalQuantity) {
     shipping = 0;
-  } else if (totalQuantity >= 4) {
+  } else if (totalJeux < 4 && totalJeux === totalQuantity) {
+    shipping = 0;
+  } else if (totalBrochure < 4 && totalJeux < 4 && totalQuantity === totalBrochure + totalJeux) {
+    shipping = 0;
+  } else if (totalQuantity > 1 && totalQuantity < 10) {
     shipping = 9;
   } else if (totalQuantity === 1) {
     shipping = 0;
