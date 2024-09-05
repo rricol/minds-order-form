@@ -60,5 +60,5 @@ export function getShipping(): number {
   if (totalQuantity === 1) {
     return 0;
   }
-  return 9;
+  return 0;
 }
